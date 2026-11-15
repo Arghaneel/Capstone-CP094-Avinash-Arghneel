@@ -22,7 +22,7 @@ public class AllTests {
 
         ReportPrinterTest.run();          // CC-07
 
-        // RankerTest.run();              // CC-09
+        RankerTest.run();                 // CC-09
 
         ThreeWordSequenceTest.run();      // CC-10
 

@@ -1,10 +1,12 @@
 package com.copycheck.ui;
 
+import com.copycheck.Settings;
 import com.copycheck.io.FileLoader;
 import com.copycheck.model.Document;
 import com.copycheck.model.PairResult;
 import com.copycheck.report.ReportPrinter;
 import com.copycheck.similarity.Comparer;
+import com.copycheck.similarity.Ranker;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +70,7 @@ public class Menu {
         System.out.println("5. Remove a document");
         System.out.println("6. Clear all documents");
         System.out.println("7. Run similarity report");
+        System.out.println("8. Show most similar pairs (ranking)");
         System.out.println("0. Exit");
     }
 
@@ -81,6 +84,7 @@ public class Menu {
             case "5" -> removeDocument();
             case "6" -> clearDocuments();
             case "7" -> runReport();
+            case "8" -> showRanking();
             default -> System.out.println("Invalid choice. Please enter a number from the menu.");
         }
     }
@@ -188,6 +192,29 @@ public class Menu {
         }
         lastResults = Comparer.compareAll(documents);
         System.out.print(ReportPrinter.buildReport(lastResults));
+    }
+
+    // Option 8: compares every pair and shows the most similar ones first.
+    private void showRanking() {
+        if (documents.size() < 2) {
+            System.out.println("Please load at least two documents first (you have "
+                    + documents.size() + ").");
+            return;
+        }
+        lastResults = Comparer.compareAll(documents);
+        int size = lastResults.size();
+        int defaultCount = Math.min(Settings.TOP_PAIRS, size);
+        String input = readLine("How many pairs to show? (1-" + size + ", Enter for "
+                + defaultCount + "): ").trim();
+        int count = defaultCount;
+        if (!input.isEmpty()) {
+            count = parseNumber(input);
+        }
+        if (count < 1 || count > size) {
+            throw new IllegalArgumentException("Please enter a number from 1 to " + size + ".");
+        }
+        System.out.print(ReportPrinter.buildRanking(Ranker.top(lastResults, count)));
+        System.out.println("Tip: option 7 shows the common sentences for every pair.");
     }
 
     // Adds a document. If the name is already used, adds " (2)", " (3)"... to keep names unique.
