@@ -14,7 +14,7 @@ public class AllTests {
 
         SentenceSplitterTest.run();       // CC-04
 
-        // WordFrequencyTest.run();       // CC-05
+        WordFrequencyTest.run();          // CC-05
 
         CommonSentencesTest.run();        // CC-06
 
