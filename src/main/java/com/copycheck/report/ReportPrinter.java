@@ -25,6 +25,15 @@ public class ReportPrinter {
         return report.toString();
     }
 
+    // Returns the top pairs as a ranked table.
+    public static String buildRanking(List<PairResult> topPairs) {
+        if (topPairs == null || topPairs.isEmpty()) {
+            return "No results to show.\n";
+        }
+        return "========== Top " + topPairs.size() + " most similar pairs ==========\n"
+                + buildTable(topPairs);
+    }
+
     // The summary table: a header, a dashed line, then one numbered row per pair.
     private static String buildTable(List<PairResult> results) {
         StringBuilder table = new StringBuilder();
